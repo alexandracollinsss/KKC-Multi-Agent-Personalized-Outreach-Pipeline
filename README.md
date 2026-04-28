@@ -8,7 +8,9 @@ Built for the Kyber Knight Capital Builder-in-Residence engineering assessment.
 
 ### Requirements
 
-Python 3.10 or later and a Gemini API key.
+Python 3.10 or later, a Gemini API key, and a Serper API key.
+
+Serper (Google Search via serper.dev) is the primary search provider and makes a real difference in result quality. The pipeline falls back to DuckDuckGo if no key is set, but Serper is what produced the results in this repo. Free tier is 2500 queries per month with no credit card required.
 
 ### Install
 
@@ -19,15 +21,15 @@ pip install -U pip
 pip install -r requirements.txt
 ```
 
-### API key
+### API keys
 
-Copy the example env file and add your key:
+Copy the example env file and add your keys:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and set `GEMINI_API_KEY`.
+Edit `.env` and set `GEMINI_API_KEY` and `SERPER_API_KEY`.
 
 ### Optional: KKC profile URL
 
