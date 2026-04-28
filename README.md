@@ -74,16 +74,13 @@ This loads contacts from `test_inputs.json`, runs Agent 1 then Agent 2 for each 
 
 ## Model Configuration
 
-The default model is `gemini-flash-latest`. Override it with the `GEMINI_MODEL` environment variable:
+The default model is `gemini-flash-latest`, which resolves to the newest available Flash model at runtime. In practice this settles on whichever model in the fallback chain responds first without a rate limit or 503.
+
+The runs in this repo used `gemini-flash-latest` with the following fallback chain, and executed on `gemini-3.1-flash-lite-preview`:
 
 ```bash
-export GEMINI_MODEL="gemini-2.5-flash"
-```
-
-The pipeline automatically falls back across models when the primary returns a rate limit or 503. To customize the chain:
-
-```bash
-export GEMINI_MODEL_FALLBACKS="gemini-2.5-flash,gemini-2.0-flash,gemini-1.5-flash"
+GEMINI_MODEL=gemini-flash-latest
+GEMINI_MODEL_FALLBACKS=gemini-3-flash-preview,gemini-3.1-flash-lite-preview,gemini-2.5-flash,gemini-2.0-flash
 ```
 
 Optional thinking speed control (low is fastest):
