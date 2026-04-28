@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.DS_Store
+
+# Generated output (keep only committed samples if desired)
+output/pipeline.log
+output/cache/
+
+# Secrets
+.env
+
+# IDE
+.idea/
+.vscode/
+
