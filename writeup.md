@@ -10,7 +10,7 @@ Agent 1 in `agent1_researcher.py` starts from a name, title, organization, and o
 
 Agent 2 in `agent2_validator.py` loads that JSON file from disk. It strips all internal metadata keys before passing anything to the model, so it has no visibility into how Agent 1 reasoned or what it considered. It re-fetches every source URL independently, runs its own searches to cross-check title and contact fit, and applies LLM judgment on top of a deterministic rules layer.
 
-The deterministic layer is what keeps validation honest. The LLM catches most problems but can miss things. Python code catches the rest: claims without a source URL are always blocked, confidence below 0.3 is always blocked, confidence between 0.3 and 0.6 is always flagged for review, and source URLs that returned an HTTP 4xx or 5xx status are flagged regardless of what the model said. The LLM and the rules run independently and their outputs merge, keeping the strongest severity when both flag the same claim.
+The deterministic layer is what keeps validation honest. The LLM catches most problems but can miss things. Python code catches the rest such as claims without a source URL are always blocked, confidence below 0.3 is always blocked, confidence between 0.3 and 0.6 is always flagged for review, and source URLs that returned an HTTP 4xx or 5xx status are flagged regardless of what the model said. The LLM and the rules run independently and their outputs merge, keeping the strongest severity when both flag the same claim.
 
 ### Model choice
 
@@ -52,7 +52,7 @@ The third priority is a more reliable LinkedIn access path. LinkedIn is the sing
 
 I would also expand the source types the pipeline actively searches. X posts and threads are often where people express views most directly, and those views are exactly the kind of specific hook the opening email needs. A third-party API providing reliable search access to X content, with the same claim-to-source traceability rules applied, would increase hook quality for active posters.
 
-## Known failure modes in your current implementation
+## Known failure modes in my current implementation
 
 **No relationship context.** The validator evaluates every contact as a cold outreach target. It cannot distinguish between a new contact and someone who already has a relationship with the sender. This produced the Manny Maceda false positive. He is a legitimate warm contact flagged as misaligned because the system only sees his title and org, not his history with KKC.
 
@@ -62,3 +62,4 @@ I would also expand the source types the pipeline actively searches. X posts and
 
 **Email inference is fragile.** The pipeline prefers leaving `resolved_email` null over guessing from domain conventions alone. This is the right tradeoff for accuracy but it means most contacts come through without a confirmed address.
 
+**Pages behind walls reduce retrieval quality.** Paywalls, JavaScript rendering, and aggressive bot detection all reduce how much usable text gets into the retrieval packet. The Jina Reader fallback recovers some of these cases. When a contact's organization publishes most of its content behind a login, the research packet is thinner and the resulting email is more likely to WARN or FAIL validation.
